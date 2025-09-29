@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export const baseUrl = "http://localhost:3000/api/todo";
+// Use backend URL from environment variable
+const baseUrl = import.meta.env.VITE_API_URL + "/api/todo";
 
 const App = () => {
   const [todos, setTodos] = useState([]);
@@ -10,8 +11,12 @@ const App = () => {
 
   // Fetch todos
   const fetchTodos = async () => {
-    const res = await axios.get(baseUrl);
-    setTodos(res.data);
+    try {
+      const res = await axios.get(baseUrl);
+      setTodos(res.data);
+    } catch (err) {
+      console.error("Failed to fetch todos:", err);
+    }
   };
 
   useEffect(() => {
@@ -23,22 +28,34 @@ const App = () => {
     e.preventDefault();
     if (!title.trim()) return;
 
-    const res = await axios.post(`${baseUrl}/create`, { title, description });
-    setTodos([res.data, ...todos]);
-    setTitle("");
-    setDescription("");
+    try {
+      const res = await axios.post(`${baseUrl}/create`, { title, description });
+      setTodos([res.data, ...todos]);
+      setTitle("");
+      setDescription("");
+    } catch (err) {
+      console.error("Failed to add todo:", err);
+    }
   };
 
   // Toggle complete
   const toggleComplete = async (id, isCompleted) => {
-    const res = await axios.put(`${baseUrl}/update/${id}`, { isCompleted: !isCompleted });
-    setTodos(todos.map((t) => (t._id === id ? res.data : t)));
+    try {
+      const res = await axios.put(`${baseUrl}/update/${id}`, { isCompleted: !isCompleted });
+      setTodos(todos.map((t) => (t._id === id ? res.data : t)));
+    } catch (err) {
+      console.error("Failed to toggle todo:", err);
+    }
   };
 
   // Delete todo
   const deleteTodo = async (id) => {
-    await axios.delete(`${baseUrl}/delete/${id}`);
-    setTodos(todos.filter((t) => t._id !== id));
+    try {
+      await axios.delete(`${baseUrl}/delete/${id}`);
+      setTodos(todos.filter((t) => t._id !== id));
+    } catch (err) {
+      console.error("Failed to delete todo:", err);
+    }
   };
 
   return (
