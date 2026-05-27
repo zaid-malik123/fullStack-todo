@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
 app.get("/",(req, res)=>{
-    res.send("hello")
+    res.send("hello gyus fully woking ci cd")
 })
 
 app.use("/api/todo", todoRoutes)
