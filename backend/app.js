@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
 app.get("/",(req, res)=>{
-    res.send("hello gyus fully woking ci cd")
+    res.send("kiya CI CD work kar rha hai ?")
 })
 
 app.use("/api/todo", todoRoutes)
